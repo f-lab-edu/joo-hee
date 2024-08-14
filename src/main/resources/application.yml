@@ -1,0 +1,69 @@
+#spring.application.name=joo-hee
+project:
+  name: joo-hee
+  description: \uD074\uB798\uC2A4 \uC608\uC57D \uC11C\uBE44\uC2A4 \uC81C\uACF5
+
+app:
+  home: app-home
+
+####################################################################
+
+server:
+  id: ${HOSTNAME:local}
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+    context-path: /
+  # tomcat access log
+  tomcat:
+    basedir: ${app.home:.}
+    access-log:
+      enabled: true
+      directory: ${app.home:.}/logs/${logging.module}/
+      prefix: ${server.id}-access                     # \uD638\uC2A4\uD2B8\uBA85(pod\uBA85)
+      pattern: '%h %l %u %t "%r" %s %{User-Agent}i %{Referer}i %b %D'
+
+####################################################################
+
+spring:
+  application:
+    name: ${project.name}
+  pid:
+    file: ${app.home}/bin/shutdown.pid
+  mvc:
+    path-match:
+      matching-strategy: ant_path_matcher
+  web:
+    resources:
+      add-mappings: false
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+
+####################################################################
+
+logging:
+  module: "main"
+  file:
+    name: ${app.home:.}/logs/${logging.module}/${server.id}-service.log
+  pattern:
+    console: "%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN} %5p [%-48.48logger{47}:%4line] %m%n"
+    file: "%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN} %5p [%-48.48logger{47}:%4line] %m%n"
+    level: "[%16X{traceId:-}, %16X{spanId:-}, %40X{MDC.REQUEST_ID}]"
+  logback:
+    rolling-policy:
+      file-name-pattern: ${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz
+      max-file-size: 50MB
+      max-history: 30
+  level:
+    ROOT: DEBUG
+    org.springframework: INFO
+    org.springframework.web: ERROR
+    org.apache: ERROR
+    springfox.documentation: ERROR
+    com.sds.cloud.oss.mapper: ERROR
+    com.sds.cloud.api: DEBUG
+    com.sds.cloud.openapi: DEBUG
