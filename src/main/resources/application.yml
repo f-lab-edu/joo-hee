@@ -1,7 +1,7 @@
 #spring.application.name=joo-hee
 project:
   name: joo-hee
-  description: \uD074\uB798\uC2A4 \uC608\uC57D \uC11C\uBE44\uC2A4 \uC81C\uACF5
+  description: 클래스 예약 서비스 제공
 
 app:
   home: app-home
@@ -22,7 +22,7 @@ server:
     access-log:
       enabled: true
       directory: ${app.home:.}/logs/${logging.module}/
-      prefix: ${server.id}-access                     # \uD638\uC2A4\uD2B8\uBA85(pod\uBA85)
+      prefix: ${server.id}-access                     # hostname (pod name)
       pattern: '%h %l %u %t "%r" %s %{User-Agent}i %{Referer}i %b %D'
 
 ####################################################################
