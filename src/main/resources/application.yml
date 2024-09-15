@@ -43,6 +43,35 @@ spring:
       hibernate:
         format_sql: true
 
+  ####################################################################
+
+  datasource:
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: jdbc:log4jdbc:mariadb://host:port/service_name
+    username: admin
+    password: ENC(maeEgB1tTjd0QvtyqJs6gzqj4Rt90tpPITTA7ktUj2FfbxfTF66UxtsqiJfSoJx7)
+    hikari:
+      minimum-idle: 10
+      maximum-pool-size: 25
+      idle-timeout: 240000 #4min
+
+mybatis:
+  mapper-locations: classpath*:mapper/**/*.xml
+  configuration:
+    cache-enabled: false
+    use-column-label: true
+    map-underscore-to-camel-case: true
+    auto-mapping-behavior: full
+    lazy-loading-enabled: true
+    call-setters-on-nulls: true
+
+####################################################################
+
+jasypt:
+  encryptor:
+    password: joohee
+    bean: encryptorBean
+
 ####################################################################
 
 logging:
@@ -50,12 +79,11 @@ logging:
   file:
     name: ${app.home:.}/logs/${logging.module}/${server.id}-service.log
   pattern:
-    console: "%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN} %5p [%-48.48logger{47}:%4line] %m%n"
-    file: "%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN} %5p [%-48.48logger{47}:%4line] %m%n"
-    level: "[%16X{traceId:-}, %16X{spanId:-}, %40X{MDC.REQUEST_ID}]"
+    console: "%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} [%-48.48logger{47}:%4line] %m%n"
+    file: "%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} [%-48.48logger{47}:%4line] %m%n"
   logback:
     rolling-policy:
-      file-name-pattern: ${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz
+      file-name-pattern: ${app.home}/logs/${logging.module}/%d{yyyy-MM-dd}.%i.log.gz
       max-file-size: 50MB
       max-history: 30
   level:
@@ -63,7 +91,4 @@ logging:
     org.springframework: INFO
     org.springframework.web: ERROR
     org.apache: ERROR
-    springfox.documentation: ERROR
-    com.sds.cloud.oss.mapper: ERROR
-    com.sds.cloud.api: DEBUG
-    com.sds.cloud.openapi: DEBUG
+    com.flab: DEBUG

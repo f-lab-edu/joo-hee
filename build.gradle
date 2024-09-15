@@ -13,34 +13,41 @@ java {
     }
 }
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
 repositories {
     mavenCentral()
+    google()
+    gradlePluginPortal()
 }
 
 dependencies {
+    // Spring Boot Starters
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-    implementation 'org.apache.commons:commons-collections4'
 
+    // Utilities
+    implementation 'org.apache.commons:commons-collections4:4.4'
+
+    // Lombok for Compile Time
     compileOnly 'org.projectlombok:lombok'
-
-    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter'
-    implementation 'org.mariadb.jdbc:mariadb-java-client'
-    implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1'
-
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
 
+    // MyBatis and Database Drivers
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
+    implementation 'org.mariadb.jdbc:mariadb-java-client'
+
+    // Log4jdbc for SQL Logging
+//    implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1'
+    implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2:1.16'
+
+    // Development Only Tools
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // Spring Boot Configuration Processor
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    // Testing Dependencies
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
