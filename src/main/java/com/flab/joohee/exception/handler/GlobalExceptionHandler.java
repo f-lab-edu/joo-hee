@@ -1,8 +1,9 @@
 package com.flab.joohee.exception.handler;
 
 import com.flab.joohee.code.CommonErrorCode;
+import com.flab.joohee.code.ErrorCode;
 import com.flab.joohee.exception.JooHeeException;
-import com.flab.joohee.presentation.model.JooHeeResponse;
+import com.flab.joohee.model.response.JooHeeResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,9 +22,9 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 public class GlobalExceptionHandler {
 
 	@ExceptionHandler(Exception.class)
-	public ResponseEntity<JooHeeResponse> exceptionHandler(Throwable throwable) {
-		final JooHeeResponse errorResponse =
-				new JooHeeResponse("GlobalException", HttpStatus.INTERNAL_SERVER_ERROR.value(), throwable.getMessage());
+	public ResponseEntity<JooHeeResponse<ErrorCode>> exceptionHandler(Throwable throwable) {
+		final JooHeeResponse<ErrorCode> errorResponse =
+				new JooHeeResponse<>("GlobalException", HttpStatus.INTERNAL_SERVER_ERROR.value(), throwable.getMessage());
 
 		log.error(errorResponse.toMessage());
 
@@ -31,9 +32,9 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(JooHeeException.class)
-	public ResponseEntity<JooHeeResponse> jooHeeExceptionHandler(Throwable throwable) {
+	public ResponseEntity<JooHeeResponse<ErrorCode>> jooHeeExceptionHandler(Throwable throwable) {
 		final JooHeeException jooHeeException = (JooHeeException) throwable;
-		final JooHeeResponse errorResponse = new JooHeeResponse(jooHeeException.getErrorCode());
+		final JooHeeResponse<ErrorCode> errorResponse = new JooHeeResponse<>(jooHeeException.getErrorCode());
 
 		log.error(errorResponse.toMessage());
 
@@ -44,13 +45,11 @@ public class GlobalExceptionHandler {
 
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ExceptionHandler(NoHandlerFoundException.class)
-	public ResponseEntity<JooHeeResponse> notFoundExceptionHandler(
+	public ResponseEntity<JooHeeResponse<ErrorCode>> notFoundExceptionHandler(
 			Throwable cause) {
+		final JooHeeResponse<ErrorCode> errorResponse = new JooHeeResponse<>(CommonErrorCode.NOT_FOUND);
 
-		final JooHeeResponse errorResponse = new JooHeeResponse(CommonErrorCode.NOT_FOUND);
-		errorResponse.setMessage(cause.getMessage());
-
-		log.error(errorResponse.toMessage());
+		log.error(cause.getMessage());
 
 		return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(errorResponse.getStatus()));
 	}
@@ -58,10 +57,9 @@ public class GlobalExceptionHandler {
 
 	@ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-	protected ResponseEntity<JooHeeResponse> httpRequestMethodNotSupportedExceptionHandler(
+	protected ResponseEntity<JooHeeResponse<ErrorCode>> httpRequestMethodNotSupportedExceptionHandler(
 			HttpRequestMethodNotSupportedException exception) {
-
-		final JooHeeResponse errorResponse = new JooHeeResponse(CommonErrorCode.METHOD_NOT_ALLOWED);
+		final JooHeeResponse<ErrorCode> errorResponse = new JooHeeResponse<>(CommonErrorCode.METHOD_NOT_ALLOWED);
 
 		log.error(exception.getMessage());
 

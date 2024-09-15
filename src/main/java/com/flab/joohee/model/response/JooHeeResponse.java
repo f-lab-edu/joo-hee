@@ -1,15 +1,17 @@
-package com.flab.joohee.presentation.model;
+package com.flab.joohee.model.response;
 
 import com.flab.joohee.code.ErrorCode;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
+import org.springframework.http.HttpStatus;
 
 @Getter
-@Setter
-public class JooHeeResponse {
+@AllArgsConstructor
+public class JooHeeResponse<T> {
 	private String code;
 	private int status;
 	private Object message;
+	private T data;
 
 	public JooHeeResponse(String code, int status, Object message) {
 		this.code = code;
@@ -19,6 +21,11 @@ public class JooHeeResponse {
 
 	public JooHeeResponse(ErrorCode errorCode) {
 		this(errorCode.code(), errorCode.status(), errorCode.errorMsg());
+	}
+
+	public JooHeeResponse(T data) {
+		this("Success", HttpStatus.OK.value(), HttpStatus.OK.name());
+		this.data = data;
 	}
 
 	public String toMessage() {

@@ -2,7 +2,8 @@ package com.flab.joohee.exception.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flab.joohee.code.CommonErrorCode;
-import com.flab.joohee.presentation.model.JooHeeResponse;
+import com.flab.joohee.code.ErrorCode;
+import com.flab.joohee.model.response.JooHeeResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ public class JooHeeAccessDeniedHandler implements AccessDeniedHandler {
 	public void handle(HttpServletRequest request, HttpServletResponse response,
 			AccessDeniedException accessDeniedException) throws IOException {
 		final ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();
-		final JooHeeResponse errorResponse = new JooHeeResponse(CommonErrorCode.FORBIDDEN);
+		final JooHeeResponse<ErrorCode> errorResponse = new JooHeeResponse<>(CommonErrorCode.FORBIDDEN);
 
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		response.setStatus(HttpStatus.FORBIDDEN.value());
