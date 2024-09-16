@@ -2,7 +2,8 @@ package com.flab.joohee.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flab.joohee.code.CommonErrorCode;
-import com.flab.joohee.presentation.model.JooHeeResponse;
+import com.flab.joohee.code.ErrorCode;
+import com.flab.joohee.model.response.JooHeeResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,7 +23,7 @@ public class JooHeeAuthEntryPointConfig implements AuthenticationEntryPoint {
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException, ServletException {
 		final ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();
-		final JooHeeResponse errorResponse = new JooHeeResponse(CommonErrorCode.UNAUTHORIZED);
+		final JooHeeResponse<ErrorCode> errorResponse = new JooHeeResponse<>(CommonErrorCode.UNAUTHORIZED);
 
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		response.setStatus(HttpStatus.UNAUTHORIZED.value());

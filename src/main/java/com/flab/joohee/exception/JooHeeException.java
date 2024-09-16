@@ -11,10 +11,6 @@ public class JooHeeException extends RuntimeException {
 		this(errorCode, null);
 	}
 
-	public JooHeeException(String code, String errorMsg, int status) {
-		this(new ErrorCode(code, errorMsg, status), null);
-	}
-
 	public JooHeeException(ErrorCode errorCode, Throwable cause) {
 		super(errorCode.errorMsg(), cause);
 		this.errorCode = errorCode;
