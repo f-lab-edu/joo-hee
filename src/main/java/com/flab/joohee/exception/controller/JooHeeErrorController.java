@@ -1,6 +1,7 @@
 package com.flab.joohee.exception.controller;
 
-import com.flab.joohee.presentation.model.JooHeeResponse;
+import com.flab.joohee.code.ErrorCode;
+import com.flab.joohee.model.response.JooHeeResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
@@ -17,17 +18,17 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 public class JooHeeErrorController extends DefaultErrorAttributes implements ErrorController {
-
 	@RequestMapping("/error")
-	public ResponseEntity<JooHeeResponse> error(WebRequest webRequest, HttpServletResponse response) {
+	public ResponseEntity<JooHeeResponse<ErrorCode>> error(WebRequest webRequest, HttpServletResponse response) {
 		final Map<String, Object> errorAttrMap = getErrorAttributes(
 				webRequest,
 				ErrorAttributeOptions.defaults().including(
 						ErrorAttributeOptions.Include.MESSAGE,
 						ErrorAttributeOptions.Include.STACK_TRACE
 				));
+
 		final String errorMsg = errorAttrMap.get("message") + " - " + errorAttrMap.get("error");
-		return new ResponseEntity<>(new JooHeeResponse("ErrorController", response.getStatus(), errorMsg),
-				HttpStatus.valueOf(response.getStatus()));
+		ErrorCode errorCode = new ErrorCode("ErrorController", response.getStatus(), errorMsg);
+		return new ResponseEntity<>(new JooHeeResponse<>(errorCode), HttpStatus.valueOf(response.getStatus()));
 	}
 }
